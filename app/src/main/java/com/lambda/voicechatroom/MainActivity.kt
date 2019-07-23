@@ -7,7 +7,13 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GetTokenResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,22 +31,6 @@ class MainActivity : AppCompatActivity() {
             AuthUI.getInstance().signOut(this)
         }
         startActivityForResult(Intent(context, FirebaseOauthActivity::class.java), AUTH_REQUEST_CODE)
-
-//        // Choose authentication providers
-//        val providers = arrayListOf(
-//            AuthUI.IdpConfig.EmailBuilder().build(),
-//            AuthUI.IdpConfig.PhoneBuilder().build(),
-//            AuthUI.IdpConfig.GoogleBuilder().build())
-//
-//
-//// Create and launch sign-in intent
-//        startActivityForResult(
-//            AuthUI.getInstance()
-//                .createSignInIntentBuilder()
-//                .setAvailableProviders(providers)
-//                .build(),
-//            AUTH_REQUEST_CODE)
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -48,8 +38,9 @@ class MainActivity : AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == AUTH_REQUEST_CODE) {
                 Toast.makeText(context, "Success!", Toast.LENGTH_SHORT).show()
+                    val await: Task<GetTokenResult> = FirebaseAuth.getInstance().getAccessToken(false)
+                    println("${await.result?.token}")
             }
         }
     }
-
 }
