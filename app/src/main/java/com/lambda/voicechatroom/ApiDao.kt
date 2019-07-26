@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GetTokenResult
 import kotlinx.coroutines.tasks.await
 
-const val baseUrl = "https://lambda-voice-chat-auth.herokuapp.com"
+const val baseUrl = "https://lambda-voice-chat.herokuapp.com"
 
 @WorkerThread
 object ApiDao {
@@ -27,10 +27,10 @@ object ApiDao {
                 "Accept" to "application/json"
             )
         )
-        if (success) {
-            return result
+        return if (success) {
+            result
         } else {
-            return "Unknown"
+            "Unknown"
         }
     }
 
