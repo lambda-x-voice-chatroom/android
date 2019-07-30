@@ -1,15 +1,20 @@
 package com.lambda.voicechatroom
 
-data class User(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class JsonResponse(
     val `data`: Data,
     val message: String
 )
 
+@Serializable
 data class Data(
-    val user: UserX
+    val user: User
 )
 
-data class UserX(
+@Serializable
+data class User(
     val accountBalance: String,
     val avatar: String,
     val billingSubcription: String,
@@ -17,10 +22,10 @@ data class UserX(
     val createdAt: String,
     val displayName: String,
     val email: String,
-    val firstName: Any,
+    val firstName: String?,
     val id: String,
-    val last4: Any,
-    val lastName: Any,
-    val phoneNumber: Any,
-    val stripeId: Any
+    val last4: String?,
+    val lastName: String?,
+    val phoneNumber: String?,
+    val stripeId: String?
 )

@@ -10,11 +10,13 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
+import kotlinx.serialization.json.Json
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
         const val AUTH_REQUEST_CODE = 4
+        const val USER_KEY = "user_key"
     }
 
     private lateinit var context: Context
@@ -37,9 +39,12 @@ class MainActivity : AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == AUTH_REQUEST_CODE) {
                 CoroutineScope(Dispatchers.IO + Job()).launch {
-                    val test = ApiDao.getCurrentUser()
+                    val user = ApiDao.authUser()
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(context, test, Toast.LENGTH_LONG).show()
+                        val editIntent = Intent(context, EditProfileActivity::class.java)
+                        editIntent.putExtra(USER_KEY, Json.stringify(User.serializer(), user))
+                        startActivity(Intent(context, EditProfileActivity::class.java))
+                        finish()
                     }
                 }
             }
