@@ -5,6 +5,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GetTokenResult
 import com.google.gson.Gson
 import kotlinx.coroutines.tasks.await
+import retrofit2.http.GET
+import retrofit2.http.HeaderMap
+import retrofit2.http.Headers
 
 
 const val baseUrl = "https://lambda-voice-chat-dev.herokuapp.com"
@@ -36,6 +39,11 @@ object ApiDao {
         }
         return user
     }
+//    @Headers("{Content-Type: application/json}, {Accept: application/json}")
+//    @GET("$baseUrl/api/auth")
+//    fun retrofitGet(@HeaderMap headers: Headers):User? {
+//
+//    }
 }
 
 //@WorkerThread
