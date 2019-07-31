@@ -39,6 +39,27 @@ object ApiDao {
         }
         return user
     }
+
+    suspend fun updateUser(user: User): User? {
+        val tokenString = getToken()
+        val (success, result) = NetworkAdapter.httpRequest(
+            stringUrl = "$baseUrl/api/auth",
+            requestType = NetworkAdapter.PUT,
+            jsonBody = Gson().toJson(user),
+            headerProperties = mapOf(
+                "Authorization" to "$tokenString",
+                "Content-Type" to "application/json",
+                "Accept" to "application/json"
+            )
+        )
+        var returnedUser: User? = null
+        if (success) {
+            val gson = Gson()
+            val userJson: JsonResponse = gson.fromJson(result, JsonResponse::class.java)
+            returnedUser = userJson.user
+        }
+        return returnedUser
+    }
 //    @Headers("{Content-Type: application/json}, {Accept: application/json}")
 //    @GET("$baseUrl/api/auth")
 //    fun retrofitGet(@HeaderMap headers: Headers):User? {
