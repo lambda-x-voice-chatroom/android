@@ -1,15 +1,18 @@
 package com.lambda.voicechatroom
 
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class JsonResponse(
-    val `data`: Data,
-    val message: String
+    val message: String,
+    @SerializedName("data")
+    val user: User
 )
 
 @Serializable
 data class Data(
+    @SerializedName("User")
     val user: User
 )
 
@@ -17,7 +20,7 @@ data class Data(
 data class User(
     val accountBalance: String,
     val avatar: String,
-    val billingSubcription: String,
+    val billingSubscription: String,
     val callStatus: Boolean,
     val createdAt: String,
     val displayName: String,
