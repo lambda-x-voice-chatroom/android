@@ -40,10 +40,10 @@ object ApiDao {
         return user
     }
 
-    suspend fun updateUser(user: User): User? {
+    suspend fun updateUser(user: User): Boolean {
         val tokenString = getToken()
         val (success, result) = NetworkAdapter.httpRequest(
-            stringUrl = "$baseUrl/api/auth",
+            stringUrl = "$baseUrl/api/users",
             requestType = NetworkAdapter.PUT,
             jsonBody = Gson().toJson(user),
             headerProperties = mapOf(
@@ -52,13 +52,14 @@ object ApiDao {
                 "Accept" to "application/json"
             )
         )
-        var returnedUser: User? = null
-        if (success) {
+        return success
+/*        return if (success) {
             val gson = Gson()
             val userJson: JsonResponse = gson.fromJson(result, JsonResponse::class.java)
-            returnedUser = userJson.user
-        }
-        return returnedUser
+            userJson.user
+        } else {
+            null
+        }*/
     }
 //    @Headers("{Content-Type: application/json}, {Accept: application/json}")
 //    @GET("$baseUrl/api/auth")

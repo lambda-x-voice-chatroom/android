@@ -23,12 +23,12 @@ data class User(
     val billingSubscription: String,
     val callStatus: Boolean,
     val createdAt: String,
-    val displayName: String,
-    val email: String,
-    val firstName: String?,
+    var displayName: String,
+    var email: String,
+    var firstName: String?,
     val id: String,
     val last4: String?,
-    val lastName: String?,
-    val phoneNumber: String?,
+    var lastName: String?,
+    var phoneNumber: String?,
     val stripeId: String?
 )

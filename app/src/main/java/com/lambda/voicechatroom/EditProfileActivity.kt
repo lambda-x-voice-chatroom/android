@@ -2,9 +2,12 @@ package com.lambda.voicechatroom
 
 import android.content.Context
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_edit_profile.*
+import kotlinx.coroutines.*
 
 class EditProfileActivity : AppCompatActivity() {
 
@@ -17,20 +20,42 @@ class EditProfileActivity : AppCompatActivity() {
         context = this
         val gson = Gson()
         val userString = intent.getStringExtra(MainActivity.USER_KEY)
-        val user =  gson.fromJson(userString, User::class.java)
+        val user = gson.fromJson(userString, User::class.java)
 
-        if (user != null) {
-                edit_edituser_firstname.setText(user.firstName)
-                edit_edituser_lastname.setText(user.lastName)
-                edit_edituser_displayname.setText(user.displayName)
-                edit_edituser_email.setText(user.email)
-        }
+        edit_edituser_firstname.setText(user.firstName)
+        edit_edituser_lastname.setText(user.lastName)
+        edit_edituser_displayname.setText(user.displayName)
+        edit_edituser_email.setText(user.email)
+
 
         button_edit_profile_save.setOnClickListener {
-
+            progress_edit_profile.visibility = View.VISIBLE
+            CoroutineScope(Dispatchers.IO + Job()).launch {
+                user.firstName = edit_edituser_firstname.text.toString()
+                user.lastName = edit_edituser_lastname.text.toString()
+                user.displayName = edit_edituser_displayname.text.toString()
+                user.email = edit_edituser_email.text.toString()
+                if (ApiDao.updateUser(user)) {
+                    withContext(Dispatchers.Main) {
+                        progress_edit_profile.visibility = View.GONE
+                        Toast.makeText(
+                            context,
+                            "Success!",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        progress_edit_profile.visibility = View.GONE
+                        Toast.makeText(
+                            context,
+                            "Something went wrong.  Check network connection and try again.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
         }
-
-
     }
 }
 
