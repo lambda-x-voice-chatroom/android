@@ -68,7 +68,7 @@ class GroupListAdapter(val activity: Activity) : RecyclerView.Adapter<RecyclerVi
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, index: Int) {
         val element = data[index]
         val groupHolder = viewHolder as GroupItemViewHolder
-        groupHolder.groupNameView.text = element.name
+        groupHolder.groupNameView.text = element.groupName
         groupHolder.callButton.setOnClickListener {
             Toast.makeText(activity,"Calling not yet implemented", Toast.LENGTH_LONG).show()
         }
