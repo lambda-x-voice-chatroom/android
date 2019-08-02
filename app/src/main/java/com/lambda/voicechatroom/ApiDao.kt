@@ -64,7 +64,7 @@ object ApiDao {
 
     suspend fun getGroups(): MutableList<Group> {
         val tokenString = getToken()
-        val (success, result) = NetworkAdapter.httpRequest(
+        var (success, result) = NetworkAdapter.httpRequest(
             stringUrl = "$baseUrl/groups",
             requestType = NetworkAdapter.GET,
             jsonBody = null,
@@ -76,6 +76,8 @@ object ApiDao {
         )
         val groups = mutableListOf<Group>()
         if (success) {
+            //Add mock data.
+            result = "{ \"owned\": [ { \"callStatus\": false, \"groupId\": 29, \"groupName\": \"Mock Data Group 1\" }, { \"callStatus\": false, \"groupId\": 29, \"groupName\": \"Mock Data Group 2\" } ], \"belonged\": [ { \"callStatus\": false, \"groupId\": 29, \"groupName\": \"Mock Data Group 3\" }, { \"callStatus\": false, \"groupId\": 29, \"groupName\": \"Mock Data Group 4\" } ], \"invited\": [ { \"callStatus\": false, \"groupId\": 29, \"groupName\": \"Mock Data Group 5\" }, { \"callStatus\": false, \"groupId\": 29, \"groupName\": \"Mock Data Group 6\" } ] }"
             val userJson = Gson().fromJson(result, GroupList::class.java)
             groups.addAll(userJson.owned)
             groups.addAll(userJson.belonged)
