@@ -8,7 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.common.api.Api
+import kotlinx.coroutines.*
 
 class GroupListAdapter(val activity: Activity) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -18,36 +18,24 @@ class GroupListAdapter(val activity: Activity) : RecyclerView.Adapter<RecyclerVi
         val item: View = view.findViewById(R.id.recycler_view_item)
     }
 
-    val data = mutableListOf<Group>()
+    private val data = mutableListOf<Group>()
 
     init {
         getItems()
     }
 
     private fun getItems() {
-        val groups = Api.getGroups()
-        data.addAll(groups)
-        activity.runOnUiThread {
-//            activity.progress.visibility = View.INVISIBLE
-            notifyDataSetChanged()
-        }
-/*        DataDao.getGroups(object : DataDao.DataCallback {
-            override fun callback(success: Boolean, groups: ArrayList<Group>) {
-                if (success) {
-                    data.addAll(groups)
-                    activity.runOnUiThread {
-                        activity.progress.visibility = View.INVISIBLE
-                        notifyDataSetChanged()
-                    }
-                } else {
-                    activity.runOnUiThread {
-                        activity.progress.visibility = View.INVISIBLE
-                        activity.text_error.visibility = View.VISIBLE
-                        activity.text_error.text = activity.getString(R.string.networkFailure)
-                    }
+        CoroutineScope(Dispatchers.IO + Job()).launch {
+
+            val groups = ApiDao.getGroups()
+            data.addAll(groups)
+            withContext(Dispatchers.Main) {
+                activity.runOnUiThread {
+                    //            activity.progress.visibility = View.INVISIBLE
+                    notifyDataSetChanged()
                 }
             }
-        })*/
+        }
     }
 
 
@@ -70,10 +58,10 @@ class GroupListAdapter(val activity: Activity) : RecyclerView.Adapter<RecyclerVi
         val groupHolder = viewHolder as GroupItemViewHolder
         groupHolder.groupNameView.text = element.groupName
         groupHolder.callButton.setOnClickListener {
-            Toast.makeText(activity,"Calling not yet implemented", Toast.LENGTH_LONG).show()
+            Toast.makeText(activity, "Calling not yet implemented", Toast.LENGTH_LONG).show()
         }
         groupHolder.item.setOnClickListener {
-            Toast.makeText(activity,"View group details not yet implemented", Toast.LENGTH_LONG).show()
+            Toast.makeText(activity, "View group details not yet implemented", Toast.LENGTH_LONG).show()
 //            val groupIntent = Intent(activity, GroupDetailsActivity::class.java)
 //            groupIntent.putExtra(GroupDetailsActivity.GROUP_DETAILS_KEY, element)
 //            activity.startActivity(groupIntent)

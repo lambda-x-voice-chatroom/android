@@ -61,6 +61,28 @@ object ApiDao {
             null
         }*/
     }
+
+    suspend fun getGroups(): MutableList<Group> {
+        val tokenString = getToken()
+        val (success, result) = NetworkAdapter.httpRequest(
+            stringUrl = "$baseUrl/api/auth",
+            requestType = NetworkAdapter.GET,
+            jsonBody = null,
+            headerProperties = mapOf(
+                "Authorization" to "$tokenString",
+                "Content-Type" to "application/json",
+                "Accept" to "application/json"
+            )
+        )
+        val groups = mutableListOf<Group>()
+        if (success) {
+            val userJson = Gson().fromJson(result, GroupList::class.java)
+            groups.addAll(userJson.owned)
+            groups.addAll(userJson.belonged)
+            //TODO Do something with the invited groups.
+        }
+        return groups
+    }
 //    @Headers("{Content-Type: application/json}, {Accept: application/json}")
 //    @GET("$baseUrl/api/auth")
 //    fun retrofitGet(@HeaderMap headers: Headers):User? {
