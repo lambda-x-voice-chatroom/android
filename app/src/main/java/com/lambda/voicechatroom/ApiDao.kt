@@ -10,7 +10,7 @@ import retrofit2.http.HeaderMap
 import retrofit2.http.Headers
 
 
-const val baseUrl = "https://lambda-voice-chat-dev.herokuapp.com"
+const val baseUrl = "https://lambda-voice-chat-dev.herokuapp.com/api"
 
 @WorkerThread
 object ApiDao {
@@ -22,7 +22,7 @@ object ApiDao {
     suspend fun authUser(): User? {
         val tokenString = getToken()
         val (success, result) = NetworkAdapter.httpRequest(
-            stringUrl = "$baseUrl/api/auth",
+            stringUrl = "$baseUrl/auth",
             requestType = NetworkAdapter.GET,
             jsonBody = null,
             headerProperties = mapOf(
@@ -43,7 +43,7 @@ object ApiDao {
     suspend fun updateUser(user: User): Boolean {
         val tokenString = getToken()
         val (success, result) = NetworkAdapter.httpRequest(
-            stringUrl = "$baseUrl/api/users",
+            stringUrl = "$baseUrl/users",
             requestType = NetworkAdapter.PUT,
             jsonBody = Gson().toJson(user),
             headerProperties = mapOf(
@@ -65,7 +65,7 @@ object ApiDao {
     suspend fun getGroups(): MutableList<Group> {
         val tokenString = getToken()
         val (success, result) = NetworkAdapter.httpRequest(
-            stringUrl = "$baseUrl/api/auth",
+            stringUrl = "$baseUrl/groups",
             requestType = NetworkAdapter.GET,
             jsonBody = null,
             headerProperties = mapOf(
