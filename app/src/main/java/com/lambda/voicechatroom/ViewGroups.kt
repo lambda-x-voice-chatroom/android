@@ -11,6 +11,9 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.content_view_groups.*
 
 class ViewGroups : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -35,6 +38,14 @@ class ViewGroups : AppCompatActivity(), NavigationView.OnNavigationItemSelectedL
         toggle.syncState()
 
         navView.setNavigationItemSelectedListener(this)
+
+        val viewAdapter = GroupListAdapter(this)
+        val viewManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+        recycler_groups.apply {
+            setHasFixedSize(false)
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
     }
 
     override fun onBackPressed() {

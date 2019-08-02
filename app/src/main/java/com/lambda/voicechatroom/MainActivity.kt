@@ -63,12 +63,13 @@ class MainActivity : AppCompatActivity() {
                         Intent(context, FirebaseOauthActivity::class.java),
                         AUTH_REQUEST_CODE
                     )
-                } else {
+                } else if (user.firstName == null || user.lastName == null) {
                     val editIntent = Intent(context, EditProfileActivity::class.java)
-                    val gson = Gson()
-                    editIntent.putExtra(USER_KEY, gson.toJson(user))
+                    editIntent.putExtra(USER_KEY,  Gson().toJson(user))
                     startActivity(editIntent)
                     finish()
+                } else {
+                    startActivity(Intent(context, ViewGroups::class.java))
                 }
             }
         }
