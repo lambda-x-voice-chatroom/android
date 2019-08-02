@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
                     startActivity(editIntent)
                     finish()
                 } else {
-                    startActivity(Intent(context, ViewGroups::class.java))
+                    startActivity(Intent(context, ViewGroupsActivity::class.java))
                 }
             }
         }
