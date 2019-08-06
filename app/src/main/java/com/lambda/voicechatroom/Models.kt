@@ -1,22 +1,10 @@
 package com.lambda.voicechatroom
 
-import com.google.gson.annotations.SerializedName
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class JsonResponse(
+data class JsonResponse<T>(
     val message: String,
-    @SerializedName("data")
-    val user: User
+    val data: T
 )
 
-@Serializable
-data class Data(
-    @SerializedName("User")
-    val user: User
-)
-
-@Serializable
 data class User(
     val accountBalance: String,
     val avatar: String,
