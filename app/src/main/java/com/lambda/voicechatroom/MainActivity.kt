@@ -60,12 +60,12 @@ class MainActivity : AppCompatActivity() {
                         "Failed to connect to database.  Please check internet connection and try again.",
                         Toast.LENGTH_LONG
                     ).show()
-                    startActivity(Intent(context, ViewGroupsActivity::class.java))
+//                    startActivity(Intent(context, ViewGroupsActivity::class.java))
 
-//                    startActivityForResult(
-//                        Intent(context, FirebaseOauthActivity::class.java),
-//                        AUTH_REQUEST_CODE
-//                    )
+                    startActivityForResult(
+                        Intent(context, FirebaseOauthActivity::class.java),
+                        AUTH_REQUEST_CODE
+                    )
                 } else if (user.firstName == null || user.lastName == null) {
                     val editIntent = Intent(context, EditProfileActivity::class.java)
                     editIntent.putExtra(USER_KEY,  Gson().toJson(user))

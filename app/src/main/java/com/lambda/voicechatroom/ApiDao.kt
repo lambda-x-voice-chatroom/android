@@ -80,10 +80,11 @@ object ApiDao {
 
     suspend fun createGroup(name: String): Group? {
         val tokenString = getToken()
+        val json = "{\"groupName\":\"$name\"}"
         val (success, result) = NetworkAdapter.httpRequest(
             stringUrl = "$baseUrl/groups",
             requestType = NetworkAdapter.POST,
-            jsonBody = "{groupName: '$name'}",
+            jsonBody = json,
             headerProperties = mapOf(
                 "Authorization" to "$tokenString",
                 "Content-Type" to "application/json",

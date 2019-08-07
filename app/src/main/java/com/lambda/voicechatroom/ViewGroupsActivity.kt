@@ -135,10 +135,10 @@ class ViewGroupsActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
                 CoroutineScope(Dispatchers.IO + Job()).launch {
                     val group = ApiDao.createGroup(newGroup.toString())
                     withContext(Dispatchers.Main) {
-                        recycler_groups.notify()
+                        Toast.makeText(context, "$newGroup", Toast.LENGTH_LONG).show()
+//                        recycler_groups.notify()
                     }
                 }
-                Toast.makeText(context, "$newGroup", Toast.LENGTH_LONG).show()
             }
 
             if (isValid) {
