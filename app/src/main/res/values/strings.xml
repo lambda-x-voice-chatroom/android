@@ -15,4 +15,7 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
     <string name="title_activity_group_details">GroupDetailsActivity</string>
+    <string name="OK">OK</string>
+    <string name="cancel">cancel</string>
+    <string name="validation_empty">Enter a name</string>
 </resources>

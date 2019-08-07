@@ -13,7 +13,7 @@ object NetworkAdapter {
     const val POST = "POST"
     const val PUT = "PUT"
     const val DELETE = "DELETE"
-    const val TIMEOUT = 10000
+    private const val TIMEOUT = 10000  //10 seconds
 
 
     @WorkerThread

@@ -14,7 +14,7 @@
         android:textSize="40sp" />
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/edit_dialog_groupname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
