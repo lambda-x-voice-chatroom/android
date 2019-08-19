@@ -1,5 +1,7 @@
 package com.lambda.voicechatroom
 
+import com.google.gson.annotations.SerializedName
+
 data class JsonResponse<T>(
     val message: String,
     val data: T
@@ -28,7 +30,25 @@ data class GroupList(
 )
 
 data class Group(
-    val callStatus: Boolean,
+    @SerializedName("id")
     val groupId: Int,
-    val groupName: String
+    @SerializedName("name")
+    val groupName: String,
+    @SerializedName("callStatus")
+    val callStatus: Boolean,
+    @SerializedName("phoneNumber")
+    val phoneNumber: String? = null
+)
+
+
+data class GroupDetails(
+    val group: Group,
+    val members: List<GroupMember>,
+    val owner: GroupMember
+)
+
+data class GroupMember(
+    val displayName: String,
+    val email: String,
+    val groupId: Int
 )
