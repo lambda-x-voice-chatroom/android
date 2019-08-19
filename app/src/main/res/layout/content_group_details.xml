@@ -58,11 +58,27 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintTop_toBottomOf="@id/text_details_email" />
 
+    <TextView
+        android:id="@+id/text_details_members_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Members"
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@+id/line_details_owner" />
+
+    <View
+        android:id="@+id/line_details_members"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@id/text_details_members_label" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_details_members"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/line_details_owner" />
+        app:layout_constraintTop_toBottomOf="@+id/line_details_members" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
