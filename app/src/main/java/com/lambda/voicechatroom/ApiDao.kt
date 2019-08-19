@@ -38,6 +38,27 @@ object ApiDao {
         return user
     }
 
+    suspend fun getUser(): User? {
+        val tokenString = getToken()
+        val (success, result) = NetworkAdapter.httpRequest(
+            stringUrl = "$baseUrl/user",
+            requestType = NetworkAdapter.GET,
+            jsonBody = null,
+            headerProperties = mapOf(
+                "Authorization" to "$tokenString",
+                "Content-Type" to "application/json",
+                "Accept" to "application/json"
+            )
+        )
+        var user: User? = null
+        if (success) {
+            val dataType = object : TypeToken<JsonResponse<User>>() {}.type
+            val userJson: JsonResponse<User> = Gson().fromJson(result, dataType)
+            user = userJson.data
+        }
+        return user
+    }
+
 
     suspend fun updateUser(user: User): Boolean {
         val tokenString = getToken()
