@@ -99,6 +99,27 @@ object ApiDao {
         }
         return group
     }
+
+    suspend fun getGroupById(id: Int): Group? {
+        val tokenString = getToken()
+        val (success, result) = NetworkAdapter.httpRequest(
+            stringUrl = "$baseUrl/groups/$id",
+            requestType = NetworkAdapter.GET,
+            jsonBody = null,
+            headerProperties = mapOf(
+                "Authorization" to "$tokenString",
+                "Content-Type" to "application/json",
+                "Accept" to "application/json"
+            )
+        )
+        var group: Group? = null
+        if (success) {
+            val dataType = object : TypeToken<JsonResponse<Group>>() {}.type
+            val json: JsonResponse<Group> = Gson().fromJson(result, dataType)
+            group = json.data
+        }
+        return group
+    }
 }
 
 
