@@ -1,6 +1,7 @@
 package com.lambda.voicechatroom
 
 import android.app.Activity
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,10 +62,9 @@ class GroupListAdapter(val activity: Activity) : RecyclerView.Adapter<RecyclerVi
             Toast.makeText(activity, "Calling not yet implemented", Toast.LENGTH_LONG).show()
         }
         groupHolder.item.setOnClickListener {
-            Toast.makeText(activity, "View group details not yet implemented", Toast.LENGTH_LONG).show()
-//            val groupIntent = Intent(activity, GroupDetailsActivity::class.java)
-//            groupIntent.putExtra(GroupDetailsActivity.GROUP_DETAILS_KEY, element)
-//            activity.startActivity(groupIntent)
+            val groupIntent = Intent(activity, GroupDetailsActivity::class.java)
+            groupIntent.putExtra(GroupDetailsActivity.GROUP_DETAILS_KEY, element.groupId)
+            activity.startActivity(groupIntent)
         }
     }
 }
