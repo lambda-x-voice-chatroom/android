@@ -94,13 +94,13 @@ object ApiDao {
         var group: Group? = null
         if (success) {
             val dataType = object : TypeToken<JsonResponse<Group>>() {}.type
-            val json: JsonResponse<Group> = Gson().fromJson(result, dataType)
-            group = json.data
+            val jsonResponse: JsonResponse<Group> = Gson().fromJson(result, dataType)
+            group = jsonResponse.data
         }
         return group
     }
 
-    suspend fun getGroupById(id: Int): Group? {
+    suspend fun getGroupById(id: Int): GroupDetails? {
         val tokenString = getToken()
         val (success, result) = NetworkAdapter.httpRequest(
             stringUrl = "$baseUrl/groups/$id",
@@ -112,13 +112,13 @@ object ApiDao {
                 "Accept" to "application/json"
             )
         )
-        var group: Group? = null
+        var groupDetails: GroupDetails? = null
         if (success) {
-            val dataType = object : TypeToken<JsonResponse<Group>>() {}.type
-            val json: JsonResponse<Group> = Gson().fromJson(result, dataType)
-            group = json.data
+            val dataType = object : TypeToken<JsonResponse<GroupDetails>>() {}.type
+            val json: JsonResponse<GroupDetails> = Gson().fromJson(result, dataType)
+            groupDetails = json.data
         }
-        return group
+        return groupDetails
     }
 }
 
