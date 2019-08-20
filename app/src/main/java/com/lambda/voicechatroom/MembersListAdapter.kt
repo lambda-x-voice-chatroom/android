@@ -9,7 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
-class MembersListAdapter(val activity: Activity, val data: MutableList<GroupMember>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MembersListAdapter(val activity: Activity, val data: MutableList<GroupMember>, val ownerFlag: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class GroupItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameView: TextView = view.findViewById(R.id.text_member_name)
@@ -37,6 +37,7 @@ class MembersListAdapter(val activity: Activity, val data: MutableList<GroupMemb
         val groupHolder = viewHolder as GroupItemViewHolder
         groupHolder.nameView.text = element.displayName
         groupHolder.emailView.text = element.email
+        groupHolder.deleteButton.isEnabled = ownerFlag //Disable delete button if not owner.
         groupHolder.deleteButton.setOnClickListener {
             Toast.makeText(activity, "Deleting members not yet implemented", Toast.LENGTH_LONG).show()
         }
