@@ -9,9 +9,9 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimaryDark"
         android:contentDescription="@string/app_name"
-        android:text="Invite to this Chatroom"
+        android:text="Invite to Chatroom"
         android:textAlignment="center"
-        android:textSize="36sp" />
+        android:textSize="30sp" />
 
     <EditText
         android:id="@+id/edit_invite_email"
@@ -21,18 +21,20 @@
         android:layout_marginTop="16dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:textAlignment="center"
         android:hint="example@example.com"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:textAlignment="center" />
 
     <Button
         android:id="@+id/button_invite_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/radiused_rectangle_background"
         android:backgroundTint="@color/colorPrimaryDark"
         android:padding="10dp"
-        android:textSize="24sp"
-        android:text="Pick From Contacts" />
+        android:text="Pick From Contacts"
+        android:textSize="24sp" />
 
 </LinearLayout>

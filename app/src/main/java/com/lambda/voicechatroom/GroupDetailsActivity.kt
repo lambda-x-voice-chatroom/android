@@ -29,7 +29,7 @@ class GroupDetailsActivity : AppCompatActivity() {
     }
 
     private lateinit var context: Context
-    private lateinit var dialogView:View
+    private lateinit var dialogView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,14 +91,14 @@ class GroupDetailsActivity : AppCompatActivity() {
 
                 var emailAddress = ""
                 val uri = data?.data
-                    val cursor: Cursor? = contentResolver.query(uri, null, null, null, null)
+                val cursor: Cursor? = contentResolver.query(uri, null, null, null, null)
 
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         val emailIndex =
-                            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)
+                                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)
                         emailAddress = cursor.getString(emailIndex)
-                        val emailEditText:EditText = dialogView.findViewById(R.id.edit_invite_email)
+                        val emailEditText: EditText = dialogView.findViewById(R.id.edit_invite_email)
                         emailEditText.setText(emailAddress)
 //                        Toast.makeText(context, emailAddress, Toast.LENGTH_SHORT).show()
                     }
@@ -110,12 +110,12 @@ class GroupDetailsActivity : AppCompatActivity() {
         }
     }
 
-    fun showInviteDialog(view:View) {
+    fun showInviteDialog(view: View) {
         val builder = AlertDialog.Builder(context)
 
-        val emailEditText:EditText = view.findViewById(R.id.edit_invite_email)
+        val emailEditText: EditText = view.findViewById(R.id.edit_invite_email)
 
-        val contactButton:Button = view.findViewById(R.id.button_invite_contact)
+        val contactButton: Button = view.findViewById(R.id.button_invite_contact)
 
         contactButton.setOnClickListener {
             val contactPickerIntent = Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Email.CONTENT_URI)
