@@ -141,6 +141,22 @@ object ApiDao {
         }
         return groupDetails
     }
+
+    suspend fun postInvitation(id: Int, emailAddress: String): Boolean {
+        val tokenString = getToken()
+        val json = "{\"addresses\":\"$emailAddress\"}"
+        val (success, result) = NetworkAdapter.httpRequest(
+            stringUrl = "$baseUrl/groups/$id/invite",
+            requestType = NetworkAdapter.POST,
+            jsonBody = json,
+            headerProperties = mapOf(
+                "Authorization" to "$tokenString",
+                "Content-Type" to "application/json",
+                "Accept" to "application/json"
+            )
+        )
+        return success
+    }
 }
 
 
