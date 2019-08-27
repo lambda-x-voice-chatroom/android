@@ -144,9 +144,9 @@ object ApiDao {
 
     suspend fun postInvitation(id: Int, emailAddress: String): Boolean {
         val tokenString = getToken()
-        val json = "{\"addresses\":\"$emailAddress\"}"
+        val json = "{\"email\":\"$emailAddress\"}"
         val (success, result) = NetworkAdapter.httpRequest(
-            stringUrl = "$baseUrl/groups/$id/invite",
+            stringUrl = "$baseUrl/groups/$id/groupInvitees",
             requestType = NetworkAdapter.POST,
             jsonBody = json,
             headerProperties = mapOf(
