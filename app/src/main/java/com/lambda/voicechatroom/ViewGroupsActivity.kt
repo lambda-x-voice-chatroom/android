@@ -1,6 +1,7 @@
 package com.lambda.voicechatroom
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.core.view.GravityCompat
@@ -14,15 +15,20 @@ import android.view.Menu
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.auth.AuthUI
 import kotlinx.android.synthetic.main.content_view_groups.*
 import kotlinx.coroutines.*
-import okhttp3.internal.notify
+import java.util.ArrayList
 
 class ViewGroupsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var context: Context
+    private lateinit var viewAdapter: GroupListAdapter
+    private lateinit var viewModel: GroupViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +37,9 @@ class ViewGroupsActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         setSupportActionBar(toolbar)
         context = this
 
-        val fab: FloatingActionButton = findViewById(R.id.fab_viewgroups)
+        val fab: FloatingActionButton = this.findViewById(R.id.fab_viewgroups)
         fab.setOnClickListener {
-//                view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show()
+            //                view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show()
 //            val fragment = CreateGroupDialogFragment()
 ////            fragment.show(supportFragmentManager, "groupName")
             showCreateGroupDialog()
@@ -41,22 +47,44 @@ class ViewGroupsActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val toggle = ActionBarDrawerToggle(
-            this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
         navView.setNavigationItemSelectedListener(this)
 
-        val viewAdapter = GroupListAdapter(this)
+
+        viewModel = ViewModelProviders.of(this).get(GroupViewModel::class.java)
+
         val viewManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
         recycler_groups.apply {
             setHasFixedSize(false)
             layoutManager = viewManager
-            adapter = viewAdapter
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        val observer = Observer<ArrayList<Group>> { groups ->
+            if (recycler_groups.adapter == null) {
+                viewAdapter = GroupListAdapter(this, groups)
+                recycler_groups.adapter = viewAdapter
+            }
+            viewAdapter.notifyDataSetChanged()
+        }
+        viewModel.initList().observe(this, observer)
+        CoroutineScope(Dispatchers.IO + Job()).launch {
+            viewModel.refreshGroupsList()
+            withContext(Dispatchers.Main) {
+                viewAdapter.notifyDataSetChanged()
+            }
+        }
+    }
 
     override fun onBackPressed() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -87,7 +115,9 @@ class ViewGroupsActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
-                // Handle the camera action
+                AuthUI.getInstance().signOut(this)
+                startActivity(Intent(context, MainActivity::class.java))
+                finish()
             }
             R.id.nav_gallery -> {
 
@@ -110,7 +140,7 @@ class ViewGroupsActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         return true
     }
 
-    fun showCreateGroupDialog() {
+    private fun showCreateGroupDialog() {
 //        val context = this
         val builder = AlertDialog.Builder(context)
 //        builder.setTitle("New Group")
@@ -133,10 +163,9 @@ class ViewGroupsActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             if (isValid) {
 
                 CoroutineScope(Dispatchers.IO + Job()).launch {
-                    val group = ApiDao.createGroup(newGroup.toString())
+                    viewModel.addGroup(newGroup.toString())
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(context, "$newGroup", Toast.LENGTH_LONG).show()
-//                        recycler_groups.notify()
+                        viewAdapter.notifyDataSetChanged()
                     }
                 }
             }
@@ -154,32 +183,3 @@ class ViewGroupsActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
 }
-
-/*class CreateGroupDialogFragment : DialogFragment() {
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let {
-            val builder = AlertDialog.Builder(it)
-            // Get the layout inflater
-            val inflater = requireActivity().layoutInflater
-
-            // Inflate and set the layout for the dialog
-            // Pass null as the parent view because its going in the dialog layout
-            builder.setView(inflater.inflate(R.layout.group_name_dialog, null))
-                // Add action buttons
-                .setPositiveButton(R.string.OK,
-                    DialogInterface.OnClickListener { dialog, id ->
-                        CoroutineScope(Dispatchers.IO + Job()).launch {
-                            val edt = R.id.edit_dialog_groupname
-                            val groupName = e.text.toString()
-                         val group = ApiDao.createGroup(groupName)
-                        }
-                        })
-                .setNegativeButton(R.string.cancel,
-                    DialogInterface.OnClickListener { dialog, id ->
-                        getDialog().cancel()
-                    })
-            builder.create()
-        } ?: throw IllegalStateException("Activity cannot be null")
-    }
-}*/
