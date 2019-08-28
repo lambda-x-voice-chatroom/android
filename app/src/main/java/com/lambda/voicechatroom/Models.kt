@@ -52,3 +52,8 @@ data class GroupMember(
     val email: String,
     val groupId: Int
 )
+
+/*
+data class GroupRepo(
+    val liveDataList: MutableLiveData<ArrayList<Group>>
+)*/

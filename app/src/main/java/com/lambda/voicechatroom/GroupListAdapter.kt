@@ -9,36 +9,14 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.*
 
-class GroupListAdapter(val activity: Activity) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class GroupListAdapter(private val activity: Activity, private val data: MutableList<Group>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class GroupItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val groupNameView: TextView = view.findViewById(R.id.text_groupitem_name)
         val callButton: ImageButton = view.findViewById(R.id.button_groupitem_call)
         val item: View = view.findViewById(R.id.recycler_view_item)
     }
-
-    private val data = mutableListOf<Group>()
-
-    init {
-        getItems()
-    }
-
-    private fun getItems() {
-        CoroutineScope(Dispatchers.IO + Job()).launch {
-
-            val groups = ApiDao.getGroups()
-            data.addAll(groups)
-            withContext(Dispatchers.Main) {
-                activity.runOnUiThread {
-                    //            activity.progress.visibility = View.INVISIBLE
-                    notifyDataSetChanged()
-                }
-            }
-        }
-    }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return GroupItemViewHolder(
