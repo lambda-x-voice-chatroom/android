@@ -30,6 +30,7 @@ class GroupDetailsActivity : AppCompatActivity() {
 
     private lateinit var context: Context
     private lateinit var dialogView: View
+    private var groupDetails: GroupDetails? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,14 +54,15 @@ class GroupDetailsActivity : AppCompatActivity() {
 
         // Get details from API
         CoroutineScope(Dispatchers.IO + Job()).launch {
-            val groupDetails: GroupDetails? = ApiDao.getGroupById(groupId)
+            groupDetails = ApiDao.getGroupById(groupId)
             if (groupDetails != null) {
+                val details:GroupDetails = groupDetails as GroupDetails
                 // Spin off another request to get user.
                 CoroutineScope(Dispatchers.IO + Job()).launch {
                     val user = ApiDao.authUser()
                     if (user != null) {
                         //TODO see if this can be changed to use id, not email.
-                        if (user.email == groupDetails.owner.email) {
+                        if (user.email == details.owner.email) {
                             withContext(Dispatchers.Main) {
                                 fab.visibility = View.VISIBLE
                                 ownerFlag = true
@@ -70,8 +72,11 @@ class GroupDetailsActivity : AppCompatActivity() {
                     }
                 }
                 withContext(Dispatchers.Main) {
+                    text_details_name.text = details.group.groupName
+                    text_details_owner.text = details.owner.displayName
+                    text_details_email.text = details.owner.email
                     members.clear()
-                    members.addAll(groupDetails.members)
+                    members.addAll(details.members)
                     viewAdapter.notifyDataSetChanged()
                 }
             }
@@ -87,30 +92,27 @@ class GroupDetailsActivity : AppCompatActivity() {
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == RESULT_PICK_CONTACT) {
-//                RESULT_PICK_CONTACT -> contactPicked(data)
-
-                var emailAddress = ""
                 val uri = data?.data
-                val cursor: Cursor? = contentResolver.query(uri, null, null, null, null)
-
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        val emailIndex =
-                                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)
-                        emailAddress = cursor.getString(emailIndex)
-                        val emailEditText: EditText = dialogView.findViewById(R.id.edit_invite_email)
-                        emailEditText.setText(emailAddress)
-//                        Toast.makeText(context, emailAddress, Toast.LENGTH_SHORT).show()
+                if (uri != null) {
+                    val cursor: Cursor? = contentResolver.query(uri, null, null, null, null)
+                    if (cursor != null) {
+                        if (cursor.moveToFirst()) {
+                            val emailIndex =
+                                    cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)
+                            val emailAddress = cursor.getString(emailIndex)
+                            val emailEditText: EditText = dialogView.findViewById(R.id.edit_invite_email)
+                            emailEditText.setText(emailAddress)
+                        }
+                        cursor.close()
                     }
-                    cursor.close()
                 }
             }
         } else {
-            Log.e("ContactFragment", "Failed to pick contact")
+            Toast.makeText(context, "No contact was selected.", Toast.LENGTH_SHORT).show()
         }
     }
 
-    fun showInviteDialog(view: View) {
+    private fun showInviteDialog(view: View) {
         val builder = AlertDialog.Builder(context)
 
         val emailEditText: EditText = view.findViewById(R.id.edit_invite_email)
@@ -129,7 +131,7 @@ class GroupDetailsActivity : AppCompatActivity() {
             val newGroup = emailEditText.text
             var isValid = true
             if (newGroup.isBlank()) {
-                emailEditText.error = getString(R.string.validation_empty)
+                emailEditText.error = "Enter a valid email address"
                 isValid = false
             }
 
@@ -137,8 +139,12 @@ class GroupDetailsActivity : AppCompatActivity() {
 
                 CoroutineScope(Dispatchers.IO + Job()).launch {
                     //Send invitation to backend via ApiDao
+                    val success = ApiDao.postInvitation(
+                        groupDetails?.group?.groupId!!,
+                        emailEditText.text.toString()
+                    )
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(context, "Not yet implemented.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Added", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
