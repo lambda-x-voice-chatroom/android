@@ -56,7 +56,7 @@ class GroupDetailsActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO + Job()).launch {
             groupDetails = ApiDao.getGroupById(groupId)
             if (groupDetails != null) {
-                val details:GroupDetails = groupDetails as GroupDetails
+                val details: GroupDetails = groupDetails as GroupDetails
                 // Spin off another request to get user.
                 CoroutineScope(Dispatchers.IO + Job()).launch {
                     val user = ApiDao.authUser()
@@ -72,7 +72,11 @@ class GroupDetailsActivity : AppCompatActivity() {
                     }
                 }
                 withContext(Dispatchers.Main) {
-                    text_details_name.text = details.group?.groupName
+                    if (details.group != null) {
+                        text_details_name.text = details.group.groupName
+                    } else {
+                        button_details_accept.visibility = View.VISIBLE
+                    }
                     text_details_owner.text = details.owner.displayName
                     text_details_email.text = details.owner.email
                     members.clear()
@@ -87,6 +91,22 @@ class GroupDetailsActivity : AppCompatActivity() {
             dialogView = layoutInflater.inflate(R.layout.invite_dialog, null)
             showInviteDialog(dialogView)
         }
+
+        button_details_accept.setOnClickListener {
+            CoroutineScope(Dispatchers.IO + Job()).launch {
+                if (ApiDao.acceptInvitation(groupId)) {
+                    groupDetails = ApiDao.getGroupById(groupId)
+                    withContext(Dispatchers.Main) {
+                        button_details_accept.visibility = View.GONE
+                        text_details_name.text = groupDetails?.group?.groupName
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(context, "Failed to join group.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -98,9 +118,10 @@ class GroupDetailsActivity : AppCompatActivity() {
                     if (cursor != null) {
                         if (cursor.moveToFirst()) {
                             val emailIndex =
-                                    cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)
+                                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)
                             val emailAddress = cursor.getString(emailIndex)
-                            val emailEditText: EditText = dialogView.findViewById(R.id.edit_invite_email)
+                            val emailEditText: EditText =
+                                dialogView.findViewById(R.id.edit_invite_email)
                             emailEditText.setText(emailAddress)
                         }
                         cursor.close()
@@ -120,7 +141,8 @@ class GroupDetailsActivity : AppCompatActivity() {
         val contactButton: Button = view.findViewById(R.id.button_invite_contact)
 
         contactButton.setOnClickListener {
-            val contactPickerIntent = Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Email.CONTENT_URI)
+            val contactPickerIntent =
+                Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Email.CONTENT_URI)
             startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT)
         }
 

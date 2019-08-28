@@ -12,9 +12,25 @@
         android:id="@+id/text_details_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Group Name"
+        android:paddingBottom="8dp"
         android:textAlignment="center"
         android:textSize="40sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_details_accept"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/radiused_rectangle_background"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:text="Accept Invitation"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -62,8 +78,8 @@
         android:id="@+id/text_details_members_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
         android:text="Members"
+        android:textAlignment="center"
         android:textSize="24sp"
         app:layout_constraintTop_toBottomOf="@+id/line_details_owner" />
 
@@ -78,7 +94,7 @@
         android:id="@+id/recycler_details_members"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line_details_members" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
