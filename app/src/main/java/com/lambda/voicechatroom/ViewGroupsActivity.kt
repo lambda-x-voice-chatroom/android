@@ -115,9 +115,10 @@ class ViewGroupsActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
-                AuthUI.getInstance().signOut(this)
-                startActivity(Intent(context, MainActivity::class.java))
-                finish()
+                AuthUI.getInstance().signOut(this).addOnCompleteListener {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }
             }
             R.id.nav_gallery -> {
 
