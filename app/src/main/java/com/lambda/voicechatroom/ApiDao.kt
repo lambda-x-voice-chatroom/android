@@ -114,9 +114,8 @@ object ApiDao {
         )
         var group: Group? = null
         if (success) {
-            val dataType = object : TypeToken<JsonResponse<Group>>() {}.type
-            val jsonResponse: JsonResponse<Group> = Gson().fromJson(result, dataType)
-            group = jsonResponse.data
+            val dataType = object : TypeToken<Group>() {}.type
+            group = Gson().fromJson(result, dataType)
         }
         return group
     }
