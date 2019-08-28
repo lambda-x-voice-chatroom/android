@@ -1,6 +1,7 @@
 package com.lambda.voicechatroom
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -38,11 +39,7 @@ class EditProfileActivity : AppCompatActivity() {
                 if (ApiDao.updateUser(user)) {
                     withContext(Dispatchers.Main) {
                         progress_edit_profile.visibility = View.GONE
-                        Toast.makeText(
-                            context,
-                            "Success!",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        startActivity(Intent(context, ViewGroupsActivity::class.java))
                     }
                 } else {
                     withContext(Dispatchers.Main) {
