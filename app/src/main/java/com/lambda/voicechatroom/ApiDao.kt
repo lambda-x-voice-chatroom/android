@@ -92,9 +92,12 @@ object ApiDao {
             val dataType = object : TypeToken<JsonResponse<GroupList>>() {}.type
             val userJson: JsonResponse<GroupList> = Gson().fromJson(result, dataType)
             val groupList = userJson.data
+            groupList.invited.forEach {
+                it.accepted = false
+            }
+            groups.addAll(groupList.invited)
             groups.addAll(groupList.owned)
             groups.addAll(groupList.belonged)
-            //TODO Do something with the invited groups.
         }
         return groups
     }
@@ -134,8 +137,10 @@ object ApiDao {
         )
         var groupDetails: GroupDetails? = null
         if (success) {
+            //remove item below and use result once invite is fixed.
+            val fixResult = result.replace("\"group\":-1", "\"group\":null")
             val dataType = object : TypeToken<JsonResponse<GroupDetails>>() {}.type
-            val json: JsonResponse<GroupDetails> = Gson().fromJson(result, dataType)
+            val json: JsonResponse<GroupDetails> = Gson().fromJson(fixResult, dataType)
             groupDetails = json.data
         }
         return groupDetails

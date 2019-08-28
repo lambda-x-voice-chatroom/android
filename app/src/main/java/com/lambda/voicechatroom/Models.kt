@@ -37,12 +37,13 @@ data class Group(
     @SerializedName("callStatus")
     val callStatus: Boolean,
     @SerializedName("phoneNumber")
-    val phoneNumber: String? = null
+    val phoneNumber: String? = null,
+    var accepted: Boolean = true
 )
 
 
 data class GroupDetails(
-    val group: Group,
+    val group: Group?,
     val members: List<GroupMember>,
     val owner: GroupMember
 )

@@ -72,7 +72,7 @@ class GroupDetailsActivity : AppCompatActivity() {
                     }
                 }
                 withContext(Dispatchers.Main) {
-                    text_details_name.text = details.group.groupName
+                    text_details_name.text = details.group?.groupName
                     text_details_owner.text = details.owner.displayName
                     text_details_email.text = details.owner.email
                     members.clear()
