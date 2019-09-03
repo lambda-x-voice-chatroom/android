@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -59,16 +60,19 @@ class MainActivity : AppCompatActivity() {
                         "Failed to connect to database.  Please check internet connection and try again.",
                         Toast.LENGTH_LONG
                     ).show()
+//                    startActivity(Intent(context, ViewGroupsActivity::class.java))
+
                     startActivityForResult(
                         Intent(context, FirebaseOauthActivity::class.java),
                         AUTH_REQUEST_CODE
                     )
-                } else {
+                } else if (user.firstName == null || user.lastName == null) {
                     val editIntent = Intent(context, EditProfileActivity::class.java)
-                    val gson = Gson()
-                    editIntent.putExtra(USER_KEY, gson.toJson(user))
+                    editIntent.putExtra(USER_KEY,  Gson().toJson(user))
                     startActivity(editIntent)
                     finish()
+                } else {
+                    startActivity(Intent(context, ViewGroupsActivity::class.java))
                 }
             }
         }

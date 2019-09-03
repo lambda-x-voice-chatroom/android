@@ -4,13 +4,11 @@ import androidx.annotation.WorkerThread
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GetTokenResult
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.tasks.await
-import retrofit2.http.GET
-import retrofit2.http.HeaderMap
-import retrofit2.http.Headers
 
 
-const val baseUrl = "https://lambda-voice-chat-dev.herokuapp.com"
+const val baseUrl = "https://lambda-voice-chat-dev.herokuapp.com/api"
 
 @WorkerThread
 object ApiDao {
@@ -22,7 +20,7 @@ object ApiDao {
     suspend fun authUser(): User? {
         val tokenString = getToken()
         val (success, result) = NetworkAdapter.httpRequest(
-            stringUrl = "$baseUrl/api/auth",
+            stringUrl = "$baseUrl/auth",
             requestType = NetworkAdapter.GET,
             jsonBody = null,
             headerProperties = mapOf(
@@ -33,17 +31,39 @@ object ApiDao {
         )
         var user: User? = null
         if (success) {
-            val gson = Gson()
-            val userJson: JsonResponse = gson.fromJson(result, JsonResponse::class.java)
-            user = userJson.user
+            val dataType = object : TypeToken<JsonResponse<User>>() {}.type
+            val userJson: JsonResponse<User> = Gson().fromJson(result, dataType)
+            user = userJson.data
         }
         return user
     }
 
+    suspend fun getUser(): User? {
+        val tokenString = getToken()
+        val (success, result) = NetworkAdapter.httpRequest(
+            stringUrl = "$baseUrl/user",
+            requestType = NetworkAdapter.GET,
+            jsonBody = null,
+            headerProperties = mapOf(
+                "Authorization" to "$tokenString",
+                "Content-Type" to "application/json",
+                "Accept" to "application/json"
+            )
+        )
+        var user: User? = null
+        if (success) {
+            val dataType = object : TypeToken<JsonResponse<User>>() {}.type
+            val userJson: JsonResponse<User> = Gson().fromJson(result, dataType)
+            user = userJson.data
+        }
+        return user
+    }
+
+
     suspend fun updateUser(user: User): Boolean {
         val tokenString = getToken()
         val (success, result) = NetworkAdapter.httpRequest(
-            stringUrl = "$baseUrl/api/users",
+            stringUrl = "$baseUrl/users",
             requestType = NetworkAdapter.PUT,
             jsonBody = Gson().toJson(user),
             headerProperties = mapOf(
@@ -53,57 +73,112 @@ object ApiDao {
             )
         )
         return success
-/*        return if (success) {
-            val gson = Gson()
-            val userJson: JsonResponse = gson.fromJson(result, JsonResponse::class.java)
-            userJson.user
-        } else {
-            null
-        }*/
     }
-//    @Headers("{Content-Type: application/json}, {Accept: application/json}")
-//    @GET("$baseUrl/api/auth")
-//    fun retrofitGet(@HeaderMap headers: Headers):User? {
-//
-//    }
+
+    suspend fun getGroups(): MutableList<Group> {
+        val tokenString = getToken()
+        val (success, result) = NetworkAdapter.httpRequest(
+            stringUrl = "$baseUrl/groups",
+            requestType = NetworkAdapter.GET,
+            jsonBody = null,
+            headerProperties = mapOf(
+                "Authorization" to "$tokenString",
+                "Content-Type" to "application/json",
+                "Accept" to "application/json"
+            )
+        )
+        val groups = mutableListOf<Group>()
+        if (success) {
+            val dataType = object : TypeToken<JsonResponse<GroupList>>() {}.type
+            val userJson: JsonResponse<GroupList> = Gson().fromJson(result, dataType)
+            val groupList = userJson.data
+            groupList.invited.forEach {
+                it.accepted = false
+            }
+            groups.addAll(groupList.invited)
+            groups.addAll(groupList.owned)
+            groups.addAll(groupList.belonged)
+        }
+        return groups
+    }
+
+    suspend fun createGroup(name: String): Group? {
+        val tokenString = getToken()
+        val json = "{\"groupName\":\"$name\"}"
+        val (success, result) = NetworkAdapter.httpRequest(
+            stringUrl = "$baseUrl/groups",
+            requestType = NetworkAdapter.POST,
+            jsonBody = json,
+            headerProperties = mapOf(
+                "Authorization" to "$tokenString",
+                "Content-Type" to "application/json",
+                "Accept" to "application/json"
+            )
+        )
+        var group: Group? = null
+        if (success) {
+            val dataType = object : TypeToken<Group>() {}.type
+            group = Gson().fromJson(result, dataType)
+        }
+        return group
+    }
+
+    suspend fun getGroupById(id: Int): GroupDetails? {
+        val tokenString = getToken()
+        val (success, result) = NetworkAdapter.httpRequest(
+            stringUrl = "$baseUrl/groups/$id",
+            requestType = NetworkAdapter.GET,
+            jsonBody = null,
+            headerProperties = mapOf(
+                "Authorization" to "$tokenString",
+                "Content-Type" to "application/json",
+                "Accept" to "application/json"
+            )
+        )
+        var groupDetails: GroupDetails? = null
+        if (success) {
+            //remove item below and use result once invite is fixed.
+            val fixResult = result.replace("\"group\":-1", "\"group\":null")
+            val dataType = object : TypeToken<JsonResponse<GroupDetails>>() {}.type
+            val json: JsonResponse<GroupDetails> = Gson().fromJson(fixResult, dataType)
+            groupDetails = json.data
+        }
+        return groupDetails
+    }
+
+    suspend fun postInvitation(id: Int, emailAddress: String): Boolean {
+        val tokenString = getToken()
+        val json = "{\"email\":\"$emailAddress\"}"
+        val (success, result) = NetworkAdapter.httpRequest(
+            stringUrl = "$baseUrl/groups/$id/groupInvitees",
+            requestType = NetworkAdapter.POST,
+            jsonBody = json,
+            headerProperties = mapOf(
+                "Authorization" to "$tokenString",
+                "Content-Type" to "application/json",
+                "Accept" to "application/json"
+            )
+        )
+        return success
+    }
+
+    suspend fun acceptInvitation(groupId: Int): Boolean {
+        val tokenString = getToken()
+        val json = "{\"id\":\"$groupId\"}"
+        val (success, result) = NetworkAdapter.httpRequest(
+            stringUrl = "$baseUrl/groups/$groupId/invite",
+            requestType = NetworkAdapter.POST,
+            jsonBody = json,
+            headerProperties = mapOf(
+                "Authorization" to "$tokenString",
+                "Content-Type" to "application/json",
+                "Accept" to "application/json"
+            )
+        )
+        return success
+    }
 }
 
-//@WorkerThread
-//object Apifactory{
-//
-//    //Creating Auth Interceptor to add api_key query in front of all the requests.
-//    private val authInterceptor = Interceptor {chain->
-//        val newUrl = chain.request().url
-//            .newBuilder()
-//            .build()
-//
-//        val newRequest = chain.request()
-//            .newBuilder()
-//            .addHeader("Authorization", "${FirebaseAuth.getInstance().getAccessToken(false).await().token}")
-//            .url(newUrl)
-//            .build()
-//
-//        chain.proceed(newRequest)
-//    }
-//
-//    //OkhttpClient for building http request url
-//    private val tmdbClient = OkHttpClient().newBuilder()
-//        .addInterceptor(authInterceptor)
-//        .build()
-//
-//
-//
-//    fun retrofit() : Retrofit = Retrofit.Builder()
-//        .client(tmdbClient)
-//        .baseUrl("$baseUrl/api/auth")
-//        .addConverterFactory(MoshiConverterFactory.create())
-//        .addCallAdapterFactory(CoroutineCallAdapterFactory())
-//        .build()
-//
-//
-//    val tmdbApi : TmdbApi = retrofit().create(TmdbApi::class.java)
-//
-//}
 
 
 

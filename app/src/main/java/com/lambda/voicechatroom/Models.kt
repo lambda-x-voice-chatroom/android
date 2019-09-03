@@ -1,22 +1,12 @@
 package com.lambda.voicechatroom
 
 import com.google.gson.annotations.SerializedName
-import kotlinx.serialization.Serializable
 
-@Serializable
-data class JsonResponse(
+data class JsonResponse<T>(
     val message: String,
-    @SerializedName("data")
-    val user: User
+    val data: T
 )
 
-@Serializable
-data class Data(
-    @SerializedName("User")
-    val user: User
-)
-
-@Serializable
 data class User(
     val accountBalance: String,
     val avatar: String,
@@ -31,4 +21,35 @@ data class User(
     var lastName: String?,
     var phoneNumber: String?,
     val stripeId: String?
+)
+
+data class GroupList(
+    val belonged: List<Group>,
+    val invited: List<Group>,
+    val owned: List<Group>
+)
+
+data class Group(
+    @SerializedName("id")
+    val groupId: Int,
+    @SerializedName("name")
+    val groupName: String,
+    @SerializedName("callStatus")
+    val callStatus: Boolean,
+    @SerializedName("phoneNumber")
+    val phoneNumber: String? = null,
+    var accepted: Boolean = true
+)
+
+
+data class GroupDetails(
+    val group: Group?,
+    val members: List<GroupMember>,
+    val owner: GroupMember
+)
+
+data class GroupMember(
+    val displayName: String,
+    val email: String,
+    val groupId: Int
 )
