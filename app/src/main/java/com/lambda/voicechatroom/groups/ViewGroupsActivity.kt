@@ -1,4 +1,4 @@
-package com.lambda.voicechatroom
+package com.lambda.voicechatroom.groups
 
 import android.content.Context
 import android.content.Intent
@@ -19,6 +19,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.auth.AuthUI
+import com.lambda.voicechatroom.models.Group
+import com.lambda.voicechatroom.R
+import com.lambda.voicechatroom.login.MainActivity
 import kotlinx.android.synthetic.main.content_view_groups.*
 import kotlinx.coroutines.*
 import java.util.ArrayList

@@ -1,10 +1,11 @@
-package com.lambda.voicechatroom
+package com.lambda.voicechatroom.network
 
 import androidx.annotation.WorkerThread
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GetTokenResult
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.lambda.voicechatroom.models.*
 import kotlinx.coroutines.tasks.await
 
 

@@ -1,11 +1,13 @@
-package com.lambda.voicechatroom
+package com.lambda.voicechatroom.groups
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.lambda.voicechatroom.models.Group
 import java.util.*
 
 class GroupViewModel: ViewModel() {
-    private val repo:GroupRepo = GroupRepo()
+    private val repo: GroupRepo =
+        GroupRepo()
 
     fun initList(): MutableLiveData<ArrayList<Group>> {
         return repo.initList()

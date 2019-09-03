@@ -12,23 +12,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".InCallActivity"></activity>
+        <activity android:name=".calls.InCallActivity"></activity>
         <activity
-            android:name=".GroupDetailsActivity"
+            android:name=".group_details.GroupDetailsActivity"
             android:label="@string/title_activity_group_details"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ViewGroupsActivity"
+            android:name=".groups.ViewGroupsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".EditProfileActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".edit_profile.EditProfileActivity" />
+        <activity android:name=".login.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FirebaseOauthActivity" />
+        <activity android:name=".login.FirebaseOauthActivity" />
     </application>
 
 </manifest>

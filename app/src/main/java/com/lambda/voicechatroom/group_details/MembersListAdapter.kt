@@ -1,4 +1,4 @@
-package com.lambda.voicechatroom
+package com.lambda.voicechatroom.group_details
 
 import android.app.Activity
 import android.view.LayoutInflater
@@ -8,6 +8,8 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.lambda.voicechatroom.models.GroupMember
+import com.lambda.voicechatroom.R
 
 class MembersListAdapter(val activity: Activity, val data: MutableList<GroupMember>, val ownerFlag: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

@@ -1,4 +1,4 @@
-package com.lambda.voicechatroom
+package com.lambda.voicechatroom.network
 
 import androidx.annotation.WorkerThread
 import java.io.BufferedReader

@@ -1,4 +1,4 @@
-package com.lambda.voicechatroom
+package com.lambda.voicechatroom.calls
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.lambda.voicechatroom.R
+import com.lambda.voicechatroom.models.Group
 import kotlinx.android.synthetic.main.activity_in_call.*
 
 class InCallActivity : AppCompatActivity() {
@@ -21,7 +23,7 @@ class InCallActivity : AppCompatActivity() {
         context = this
 
         val dataType = object : TypeToken<Group>() {}.type
-        val group:Group = Gson().fromJson(intent.getStringExtra(GROUP_KEY), dataType)
+        val group: Group = Gson().fromJson(intent.getStringExtra(GROUP_KEY), dataType)
         text_incall_groupname.text = group.groupName
         chron_incall_timer.start()
 
