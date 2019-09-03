@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 
 class GroupListAdapter(private val activity: Activity, private val data: MutableList<Group>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -37,7 +38,10 @@ class GroupListAdapter(private val activity: Activity, private val data: Mutable
         val groupHolder = viewHolder as GroupItemViewHolder
         groupHolder.groupNameView.text = element.groupName
         groupHolder.callButton.setOnClickListener {
-            Toast.makeText(activity, "Calling not yet implemented", Toast.LENGTH_LONG).show()
+            val callIntent = Intent(activity, InCallActivity::class.java)
+            val gsonString = Gson().toJson(element)
+            callIntent.putExtra(InCallActivity.GROUP_KEY, gsonString)
+            activity.startActivity(callIntent)
         }
         groupHolder.item.setOnClickListener {
             val groupIntent = Intent(activity, GroupDetailsActivity::class.java)
