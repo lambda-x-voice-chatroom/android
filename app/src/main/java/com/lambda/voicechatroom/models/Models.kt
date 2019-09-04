@@ -1,4 +1,4 @@
-package com.lambda.voicechatroom
+package com.lambda.voicechatroom.models
 
 import com.google.gson.annotations.SerializedName
 

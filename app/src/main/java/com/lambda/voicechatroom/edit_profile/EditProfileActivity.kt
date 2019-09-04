@@ -1,4 +1,4 @@
-package com.lambda.voicechatroom
+package com.lambda.voicechatroom.edit_profile
 
 import android.content.Context
 import android.content.Intent
@@ -7,6 +7,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
+import com.lambda.voicechatroom.R
+import com.lambda.voicechatroom.models.User
+import com.lambda.voicechatroom.groups.ViewGroupsActivity
+import com.lambda.voicechatroom.login.MainActivity
+import com.lambda.voicechatroom.network.ApiDao
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import kotlinx.coroutines.*
 

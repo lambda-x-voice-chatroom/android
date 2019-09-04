@@ -1,4 +1,4 @@
-package com.lambda.voicechatroom
+package com.lambda.voicechatroom.group_details
 
 import android.app.Activity
 import android.content.Context
@@ -14,11 +14,14 @@ import kotlinx.coroutines.*
 import android.provider.ContactsContract
 import android.content.Intent
 import android.database.Cursor
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.lambda.voicechatroom.models.GroupDetails
+import com.lambda.voicechatroom.models.GroupMember
+import com.lambda.voicechatroom.R
+import com.lambda.voicechatroom.network.ApiDao
 
 
 class GroupDetailsActivity : AppCompatActivity() {
@@ -44,7 +47,8 @@ class GroupDetailsActivity : AppCompatActivity() {
         val fab: ImageButton = findViewById(R.id.fab_add_user)
 
         val groupId = intent.getIntExtra(GROUP_DETAILS_KEY, -1)
-        val viewAdapter = MembersListAdapter(this, members, ownerFlag)
+        val viewAdapter =
+            MembersListAdapter(this, members, ownerFlag)
         val viewManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
         recycler_details_members.apply {
             setHasFixedSize(false)
@@ -143,7 +147,9 @@ class GroupDetailsActivity : AppCompatActivity() {
         contactButton.setOnClickListener {
             val contactPickerIntent =
                 Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Email.CONTENT_URI)
-            startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT)
+            startActivityForResult(contactPickerIntent,
+                RESULT_PICK_CONTACT
+            )
         }
 
         builder.setView(view)

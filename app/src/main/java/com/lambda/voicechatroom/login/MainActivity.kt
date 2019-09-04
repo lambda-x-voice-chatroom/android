@@ -1,14 +1,17 @@
-package com.lambda.voicechatroom
+package com.lambda.voicechatroom.login
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
+import com.lambda.voicechatroom.network.ApiDao
+import com.lambda.voicechatroom.edit_profile.EditProfileActivity
+import com.lambda.voicechatroom.R
+import com.lambda.voicechatroom.groups.ViewGroupsActivity
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
@@ -30,7 +33,9 @@ class MainActivity : AppCompatActivity() {
 //            startActivityForResult(Intent(context, FirebaseOauthActivity::class.java), AUTH_REQUEST_CODE)
             requestUserData()
         } else {
-            startActivityForResult(Intent(context, FirebaseOauthActivity::class.java), AUTH_REQUEST_CODE)
+            startActivityForResult(Intent(context, FirebaseOauthActivity::class.java),
+                AUTH_REQUEST_CODE
+            )
         }
     }
 
@@ -45,7 +50,9 @@ class MainActivity : AppCompatActivity() {
                     "Failed to log in.  Please check internet connection and try again.",
                     Toast.LENGTH_LONG
                 ).show()
-                startActivityForResult(Intent(context, FirebaseOauthActivity::class.java), AUTH_REQUEST_CODE)
+                startActivityForResult(Intent(context, FirebaseOauthActivity::class.java),
+                    AUTH_REQUEST_CODE
+                )
             }
         }
     }
